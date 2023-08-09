@@ -31,16 +31,17 @@ The following explains how to debug locally on MacOS or in Windows WSL2.
 ### Prerequisites
 
 - Install the following:
-  - VS Code ([link](https://code.visualstudio.com/download))
-  - Docker Desktop ([link](https://docs.docker.com/desktop/install))
-  - ngrok ([link](https://dashboard.ngrok.com/get-started/setup)) - note you will need to create an account
+  - VS Code ([link](https://code.visualstudio.com/download)).
+  - Docker Desktop ([link](https://docs.docker.com/desktop/install)).
+  - AWS CLI ([link](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)) - make sure you have your `~/.aws/credentials` file configured or local DynamoDB will not work!
+  - ngrok ([link](https://dashboard.ngrok.com/get-started/setup)) - note you will need to create an account.
 - Create the `veracode-github-app` in a GitHub organization:
   - You must have a GitHub account to install the Veracode GitHub App into that contains at least one Maven or Gradle based Java repository that compiles successfully and produces a `.jar`, `.war` or `.ear` file. You can use [jtsmith2020/verademo-java](https://github.com/jtsmith2020/verademo-java) if you do not already have a Java application to test against.
   - Make sure you can build and run the `veracode-github-app` using the steps in [Building and Running the App](#building-and-running-the-app).
   - Once the `veracode-github-app` is running, navigate to [http://localhost:3000](http://localhost:3000).
   - If this is the first time you have run the app, you should see a **Getting Started** page. Follow the steps documented in the Probot [Configuring a GitHub App](https://probot.github.io/docs/development/#configuring-a-github-app) documentation to install the app into the default Organization associated with your GitHub account.
   - Setup the necessary GitHub actions to trigger workflows that scan your Java application:
-    - Fork the [vincentdeng-veracode/veracode](https://github.com/vincentdeng-veracode/veracode) repo into your GitHub Organization.
+    - Fork the [veracode/github-app-workflows](https://github.com/veracode/github-app-workflows) repo into your GitHub Organization making sure you name it `veracode`.
     - In your forked `veracode` repository, navigate to **_Actions_** and make sure that actions are enabled for this repository.
     - Next, navigate to **_Settings/Secrets and Variables/Actions_** and set the following three Repository secrets:
       - `API_ID`: A Veracode API ID associated with an account that can perform Static scans.
@@ -55,7 +56,10 @@ The following explains how to debug locally on MacOS or in Windows WSL2.
   ngrok http 3000
   ```
 
-2. Look for the **Forwarding** public ngrok URL in the output of the above command (this should be something like [https://abc0-123-456-78-910.ngrok.io](https://abc0-123-456-78-910.ngrok.io)). Copy this URL into the `ngrok` constant in [src/utils/constants.js](https://github.com/vincent-deng/veracode-github-app/blob/a61fb3b58083a4df7a307a6d04c6199591a1dd9b/src/utils/constants.js#L3).
+2. Look for the **Forwarding** public ngrok URL in the output of the above command (this should be something like [https://abc0-123-456-78-910.ngrok.io](https://abc0-123-456-78-910.ngrok.io)). Copy this URL into the following locations:
+
+  - The `ngrok` constant in `src/utils/constants.js`.
+  - The `appUrl` constant in `src/app_config.js`.
 
 3. You need to run a local DynamDB instance to store state information on running scan workflows. To do this, first install dynamodb-admin using the following command:
 
@@ -88,7 +92,7 @@ The following explains how to debug locally on MacOS or in Windows WSL2.
    - **Hash Attribute Name:** `run_id`
    - **Hash Attribute Type:** Number
 
-  You will need to do this each time you restart the database. Nice.
+  You will need to do this each time you restart the database container. Nice.
 
 5. In your [GitHub Developer App Settings](https://github.com/settings/apps), select the `veracode-github-app` you installed in the prerequisites and make sure that the following entries match your local configuration values:
    - **App ID:** number listed on this page matches the `APP_ID` value in your local `.env` file.
