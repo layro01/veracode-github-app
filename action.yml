@@ -31,15 +31,16 @@ inputs:
   enforce: 
     description: 'Enforce [required status check](https://docs.github.com/en/free-pro-team@latest/github/administering-a-repository/enabling-required-status-checks)'
     required: false
-    default: false
+    default: "false"
   enforce_admin: 
     description: 'Enforce [required status check](https://docs.github.com/en/free-pro-team@latest/github/administering-a-repository/enabling-required-status-checks) for admins'
     required: false
-    default: false
+    default: "false"
 runs:
   using: "composite"
   steps: 
-    - run: |
+    - name: Register workflow
+      run: |
         curl -G \
           "${{ inputs.callback_url }}" \
           -d run_id=${{ inputs.run_id }} \
@@ -52,3 +53,16 @@ runs:
           -d enforce_admin=${{ inputs.enforce_admin }} \
           --data-urlencode "name=${{ env.name || github.workflow }}"
       shell: bash
+    - name: create metadata
+      id: create-metadata-json
+      uses: jsdaniell/create-json@v1.2.2
+      with:
+        name: "metadata.json"
+        json: '{"event_type": ${{ inputs.event_type }} }'
+    - run: echo "metadata.json"
+      shell: bash
+    - name: save metadata
+      uses: actions/upload-artifact@v3
+      with:
+        name: workflow-metadata
+        path: metadata.json
