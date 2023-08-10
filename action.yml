@@ -59,8 +59,6 @@ runs:
       with:
         name: "metadata.json"
         json: '{"event_type": ${{ inputs.event_type }} }'
-    - run: echo "metadata.json"
-      shell: bash
     - name: save metadata
       uses: actions/upload-artifact@v3
       with:
