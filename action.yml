@@ -58,7 +58,7 @@ runs:
       uses: jsdaniell/create-json@v1.2.2
       with:
         name: "metadata.json"
-        json: '{"event_type": "${{ inputs.event_type }}" }'
+        json: '{"check_run_type": "${{ inputs.event_type }}" }'
     - name: save metadata
       uses: actions/upload-artifact@v3
       with:
