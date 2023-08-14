@@ -48,7 +48,7 @@ runs:
           -d branch=${{ inputs.branch }} \
           -d event_type=${{ inputs.event_type }} \
           --data-urlencode "repository_owner=${{ inputs.repository_owner }}" \
-          --data-urlencode  \
+          --data-urlencode "repository_name=${{ inputs.repository_name }}" \
           -d enforce=${{ inputs.enforce }} \
           -d enforce_admin=${{ inputs.enforce_admin }} \
           --data-urlencode "name=${{ env.name || github.workflow }}"
