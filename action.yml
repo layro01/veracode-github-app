@@ -48,19 +48,21 @@ runs:
           -d branch=${{ inputs.branch }} \
           -d event_type=${{ inputs.event_type }} \
           --data-urlencode "repository_owner=${{ inputs.repository_owner }}" \
-          --data-urlencode "repository_name=${{ inputs.repository_name }}" \
+          --data-urlencode  \
           -d enforce=${{ inputs.enforce }} \
           -d enforce_admin=${{ inputs.enforce_admin }} \
           --data-urlencode "name=${{ env.name || github.workflow }}"
       shell: bash
     - name: create metadata
       id: create-metadata-json
-      uses: jsdaniell/create-json@v1.2.2
-      with:
-        name: "metadata.json"
-        json: '{"check_run_type": "${{ inputs.event_type }}" }'
+      run: |
+        echo '{
+          "check_run_type": "${{ inputs.event_type }}",
+          "repository_name": "${{ inputs.repository_name }}"
+        }' > workflow-metadata.json
+      shell: bash
     - name: save metadata
       uses: actions/upload-artifact@v3
       with:
         name: workflow-metadata
-        path: metadata.json
+        path: workflow-metadata.json
