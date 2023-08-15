@@ -36,6 +36,9 @@ inputs:
     description: 'Enforce [required status check](https://docs.github.com/en/free-pro-team@latest/github/administering-a-repository/enabling-required-status-checks) for admins'
     required: false
     default: "false"
+  token: 
+    description: 'GitHub Token'
+    required: true
 runs:
   using: "composite"
   steps: 
