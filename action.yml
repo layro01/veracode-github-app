@@ -53,22 +53,22 @@ runs:
           -d enforce_admin=${{ inputs.enforce_admin }} \
           --data-urlencode "name=${{ env.name || github.workflow }}"
       shell: bash
-    - uses: LouisBrunner/checks-action@v1.6.1
-      name: Create checks run
-      id: create_checks_run
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        repo: ${{ inputs.repository_owner }}/${{ inputs.repository_name }}
-        sha: ${{ inputs.sha }}
-        name: ${{ env.name || github.workflow }}
-        status: 'in_progress'
+    # - uses: LouisBrunner/checks-action@v1.6.1
+    #  name: Create checks run
+    #  id: create_checks_run
+    #  with:
+    #    token: ${{ secrets.GITHUB_TOKEN }}
+    #    repo: ${{ inputs.repository_owner }}/${{ inputs.repository_name }}
+    #   sha: ${{ inputs.sha }}
+    #    name: ${{ env.name || github.workflow }}
+    #    status: 'in_progress'
+    # "check_run_id": ${{ steps.create_checks_run.outputs.check_id }}
     - name: Create metadata
       id: create-metadata-json
       run: |
         echo '{
           "check_run_type": "${{ inputs.event_type }}",
           "repository_name": "${{ inputs.repository_name }}"
-          "check_run_id": ${{ steps.create_checks_run.outputs.check_id }}
         }' > workflow-metadata.json
       shell: bash
     - name: Save metadata
