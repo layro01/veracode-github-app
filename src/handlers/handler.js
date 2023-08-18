@@ -42,7 +42,6 @@ async function handleEvents(app, context) {
       sha,
       branch,
       token: token.data.token,
-      callback_url: `${appConfig().appUrl}/register`,
       // TODO: read veracode.yml to get profile name
       profile_name: repoFullName, 
       repository: {

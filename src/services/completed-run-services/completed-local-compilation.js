@@ -3,9 +3,9 @@ const appConfig = require('../../app-config');
 
 async function handleCompletedCompilation (run, context) {
   const data = {
-    owner: run.repository_owner,
+    owner: context.payload.repository.owner.login,
     repo: run.repository_name,
-    check_run_id: run.check_run_id,
+    check_run_id: context.payload.workflow_run.check_suite_id,
     status: context.payload.workflow_run?.status,
     conclusion: context.payload.workflow_run?.conclusion,
   }
@@ -30,7 +30,6 @@ async function handleCompletedCompilation (run, context) {
       token: token.data.token,
       sha: run.sha,
       branch: run.branch,
-      callback_url: `${appConfig().appUrl}/register`,
       profile_name: context.payload.repository.full_name, 
       run_id: run.run_id,
       repository: {

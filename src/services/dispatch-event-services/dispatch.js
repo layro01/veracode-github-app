@@ -1,3 +1,5 @@
+const appConfig = require('../../app-config');
+
 const createDispatchEvent = async function (event, dispatchEventData) {
   context = dispatchEventData.context;
   await context.octokit.repos.createDispatchEvent({

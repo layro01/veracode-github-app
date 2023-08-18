@@ -1,6 +1,6 @@
 async function updateChecks(run, context, output) {
   const data = {
-    owner: run.repository_owner,
+    owner: context.payload.repository.owner.login,
     repo: run.repository_name,
     check_run_id: run.check_run_id,
     status: context.payload.workflow_run?.status,

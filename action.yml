@@ -10,9 +10,6 @@ inputs:
   name: 
     description: 'Name of check (Use `github.workflow` to use the name of the workflow)'
     required: true
-  callback_url: 
-    description: 'Callback url for register call (provided by GitHub app via `github.event.client_payload.callback_url`)'
-    required: true
   sha:
     description: 'Sha of original commit (provided by GitHub app via `github.event.client_payload.sha`)'
     required: true
@@ -42,21 +39,7 @@ inputs:
 runs:
   using: "composite"
   steps: 
-    - name: Register workflow
-      run: |
-        curl -G \
-          "${{ inputs.callback_url }}" \
-          -d run_id=${{ inputs.run_id }} \
-          -d sha=${{ inputs.sha }} \
-          -d branch=${{ inputs.branch }} \
-          -d event_type=${{ inputs.event_type }} \
-          --data-urlencode "repository_owner=${{ inputs.repository_owner }}" \
-          --data-urlencode "repository_name=${{ inputs.repository_name }}" \
-          -d enforce=${{ inputs.enforce }} \
-          -d enforce_admin=${{ inputs.enforce_admin }} \
-          --data-urlencode "name=${{ env.name || github.workflow }}"
-      shell: bash
-    - uses: LouisBrunner/checks-action@v1.6.1
+    - uses: LouisBrunner/checks-action@v1.6.1 # <-- Should not use 3rd party action!
       name: Create checks run
       id: create_checks_run
       with:

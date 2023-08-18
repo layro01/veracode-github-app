@@ -37,7 +37,9 @@ async function updateChecksForCompletedSastScan(run, context, scanConfig) {
       continue;
     }
     const timestamp = new Date().toISOString();
-    const artifactName = `${run.repository_owner}-${run.repository_name}-${timestamp}`;
+    const repository_owner = context.payload.repository.owner.login;
+    const repository_name = run.repository_name;
+    const artifactName = `${repository_owner}-${repository_name}-${timestamp}`;
     const artifactFilename = `${artifact_folder}/${artifactName}.zip`;
     const destination = `${artifact_folder}/${artifactName}`;
 
@@ -83,10 +85,9 @@ async function updateChecksForCompletedSastScan(run, context, scanConfig) {
     );
     if (annotationBatch !== []) {
       const data = {
-        owner: run.repository_owner,
+        owner: context.payload.repository.owner.login,
         repo: run.repository_name,
         check_run_id: run.check_run_id,
-        // name: `${check.name}`,
         status: context.payload.workflow_run?.status,
         conclusion: context.payload.workflow_run?.conclusion,
         output: {
